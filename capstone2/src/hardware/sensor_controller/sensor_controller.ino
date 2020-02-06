@@ -17,7 +17,7 @@
 #define DEVICE_NAME "Box Sensor V0.1"
 #define DEVICE_ID "bs00120350" 
 
-//Size of buffer
+//Size of buffer equivalent to the number of sensors
 #define BUFFER_SIZE 20
 
 //Declaring Pins **temp pin numbers currently**
@@ -48,7 +48,7 @@ char* mqttTransmitChannel;
 char* mqttReceiveChannel;
 
 //Buffer for storing data. May not need
-short buff[BUFFER_SIZE];
+int buff[BUFFER_SIZE];
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
@@ -99,9 +99,31 @@ void callback(char* topic, byte *payload, unsigned int length) {
 }
 
 void resetBuffer(){
-  for(int i = 0; i < BUFFER_SIZE; i++){
+  for(uint8_t i = 0; i < BUFFER_SIZE; i++){
     buff[i] = 0;
   }
+}
+
+int readSensor(uint8_t mux, uint8_t[] pins){
+  if(mux < 0 || mux > 1 || pins == NULL) 
+    return -1;
+  
+  return 0;
+}
+
+int[] numberToPinOutputs(int num){
+  if(num > 15)
+    return NULL;
+  
+  int output[4];
+  int i = 0;
+  while(num > 0){
+    output = num % 2;
+    num = num / 2;
+    i++;
+  }
+
+  return output;
 }
 
 void setup(){
@@ -119,16 +141,17 @@ void setup(){
 void loop(){
   client.loop();
   
-  for(int i = 0; i < BUFFER_SIZE; i++){
-    if(i == 0){
-      //set timestamp
-    }
+  for(int i = 0; i < (BUFFER_SIZE / 2); i++){
     //set serial pins
     //store sensor data into buff[i] (May be able to skip and save memory)
     //delay(50)
+    int result;
+    result = readSensor(0, numberToPinOutputs(i));
+    buff[i * 2] = result;
+    result = readSensor(0, numberToPinOutputs(i));
+    buff[(i * 2) + 1] = result;
   }
 
   //send timestamp and buffer to server
-  //resetBuffer
-  
+  //resetBuffer();
 }
