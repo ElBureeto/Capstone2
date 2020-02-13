@@ -9,7 +9,6 @@
  * client.subscribe(MQTT_SERIAL_RECEIVER_CH) used to subsctibe to a mqtt 
  * channelclient.publish(MQTT_SERIAL_PUBLISH_CH, MESSAGE) used to publish message to data 
 */
-
 #include <WiFi.h>
 #include <PubSubClient.h>
 
@@ -46,6 +45,7 @@
 */
 char* mqttTransmitChannel;
 char* mqttReceiveChannel;
+char* mqttConnectedChannel;
 
 //Buffer for storing data. May not need
 int buff[BUFFER_SIZE];
@@ -104,21 +104,21 @@ void resetBuffer(){
   }
 }
 
-int readSensor(uint8_t mux, uint8_t[] pins){
+int readSensor(uint8_t mux, uint8_t pins[]){  
   if(mux < 0 || mux > 1 || pins == NULL) 
     return -1;
   
   return 0;
 }
 
-int[] numberToPinOutputs(int num){
+uint8_t* numberToPinOutputs(int num){
   if(num > 15)
     return NULL;
   
-  int output[4];
+  uint8_t output[4];
   int i = 0;
   while(num > 0){
-    output = num % 2;
+    output[i] = num % 2;
     num = num / 2;
     i++;
   }
@@ -129,6 +129,7 @@ int[] numberToPinOutputs(int num){
 void setup(){
   mqttTransmitChannel = strcat("/", DEVICE_ID);
   mqttReceiveChannel = strcat("/", strcat(DEVICE_ID, "/ping"));
+  mqttConnectedChannel = strcat("/", strcat(DEVICE_ID, "/connected"));
   Serial.begin(115200);
   Serial.setTimeout(500);
   resetBuffer();
@@ -141,6 +142,7 @@ void setup(){
 void loop(){
   client.loop();
   
+  //get timestamp
   for(int i = 0; i < (BUFFER_SIZE / 2); i++){
     //set serial pins
     //store sensor data into buff[i] (May be able to skip and save memory)
