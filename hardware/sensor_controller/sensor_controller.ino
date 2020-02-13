@@ -11,6 +11,7 @@
 */
 #include <WiFi.h>
 #include <PubSubClient.h>
+#include <time.h>
 
 //Device Info
 #define DEVICE_NAME "Box Sensor V0.1"
@@ -46,9 +47,6 @@
 char* mqttTransmitChannel;
 char* mqttReceiveChannel;
 char* mqttConnectedChannel;
-
-//Buffer for storing data. May not need
-int buff[BUFFER_SIZE];
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
@@ -98,16 +96,13 @@ void callback(char* topic, byte *payload, unsigned int length) {
     Serial.println();
 }
 
-void resetBuffer(){
-  for(uint8_t i = 0; i < BUFFER_SIZE; i++){
-    buff[i] = 0;
-  }
-}
+int readSensor(uint8_t pins[], bool testing){  
+  if(testing){
+    time_t t;
+    srand((unsigned) time(&t));
 
-int readSensor(uint8_t mux, uint8_t pins[]){  
-  if(mux < 0 || mux > 1 || pins == NULL) 
-    return -1;
-  
+    return((rand() % 20) + 1);
+  }
   return 0;
 }
 
@@ -132,7 +127,6 @@ void setup(){
   mqttConnectedChannel = strcat("/", strcat(DEVICE_ID, "/connected"));
   Serial.begin(115200);
   Serial.setTimeout(500);
-  resetBuffer();
   setup_wifi();
   client.setServer(mqttServer, mqttPort);
   client.setCallback(callback);
@@ -141,17 +135,21 @@ void setup(){
 
 void loop(){
   client.loop();
-  
+
+  struct tm* ptr; 
+  time_t lt; 
+  lt = time(NULL); 
+  ptr = gmtime(&lt);
+
+  char* timestamp = asctime(ptr);
+  Serial.println(timestamp);
   //get timestamp
   for(int i = 0; i < (BUFFER_SIZE / 2); i++){
     //set serial pins
     //store sensor data into buff[i] (May be able to skip and save memory)
     //delay(50)
     int result;
-    result = readSensor(0, numberToPinOutputs(i));
-    buff[i * 2] = result;
-    result = readSensor(0, numberToPinOutputs(i));
-    buff[(i * 2) + 1] = result;
+    result = readSensor(numberToPinOutputs(i), true);
   }
 
   //send timestamp and buffer to server
