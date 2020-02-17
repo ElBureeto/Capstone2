@@ -1,0 +1,30 @@
+<mat-sidenav-container class="sidenav-container">
+   <mat-sidenav #drawer class="sidenav" fixedInViewport="true"
+       [attr.role]="'navigation'"
+       mode="'over'"
+       opened="false">
+     <mat-nav-list class="navigation-list">
+      <button mat-icon-button class="menu-button navigation-item" type="button" aria-label="Toggle sidenav" (tap)="drawer.toggle()">
+         <mat-icon class="material-icons">menu</mat-icon><span class="navigation-item-label"></span>
+       </button>
+       <a class="navigation-item" mat-list-item routerLink="/route1" routerLinkActive="active">
+         <mat-icon class="material-icons">home</mat-icon><span class="navigation-item-label">Home</span>
+       </a>
+       <mat-divider class="navigation-divider"></mat-divider>
+       <a class="navigation-item" mat-list-item routerLink="/route2" routerLinkActive="active">
+         <mat-icon class="material-icons">map</mat-icon><span class="navigation-item-label">Heatmap</span>
+       </a>
+       <a class="navigation-item" mat-list-item routerLink="/route3" routerLinkActive="active">
+         <mat-icon class="material-icons">info</mat-icon><span class="navigation-item-label">About Us</span>
+       </a>
+     </mat-nav-list>
+   </mat-sidenav>
+   <mat-sidenav-content class="sidenav-content">
+     <mat-toolbar class="sidenav-content-toolbar" color="primary">
+     <span class="title-center">A-TEAM</span>
+       <!-- <span class="filler"> -->
+           <!-- You can place a search bar here or anything you like -->
+       <!-- </span> -->
+     </mat-toolbar>
+   </mat-sidenav-content>
+ </mat-sidenav-container>

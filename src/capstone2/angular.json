@@ -27,7 +27,10 @@
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+               "./node_modules/jquery/dist/jquery.min.js",
+               "src/assets/js/jquery.particleground.min.js"
+            ]
           },
           "configurations": {
             "production": {
