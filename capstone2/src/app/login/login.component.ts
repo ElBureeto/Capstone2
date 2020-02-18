@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
    password: string;
 
    ngOnInit() {
-        this.particlesBackground();
+        // this.particlesBackground();
    }
 
 
@@ -26,20 +26,20 @@ export class LoginComponent implements OnInit {
       }
    }
 
-   particlesBackground() {
-      document.addEventListener('DOMContentLoaded', function () {
-         //works
-         particleground(document.getElementById('particles'), {
-            dotColor: 'black',
-            lineColor: '#283593',
-            proximity: 120
-            //  minSpeedX: 0.6,
-            //  minSpeedY: 0.6
-         });
-         // var content = document.getElementById('content');
-         // content.style.marginTop = - content.offsetHeight / 2 + 'px';
-      }, false);
-   }
+   // particlesBackground() {
+   //    document.addEventListener('DOMContentLoaded', function () {
+   //       //works
+   //       particleground(document.getElementById('particles'), {
+   //          dotColor: 'black',
+   //          lineColor: '#283593',
+   //          proximity: 120
+   //          //  minSpeedX: 0.6,
+   //          //  minSpeedY: 0.6
+   //       });
+   //       // var content = document.getElementById('content');
+   //       // content.style.marginTop = - content.offsetHeight / 2 + 'px';
+   //    }, false);
+   // }
 
 
 }
