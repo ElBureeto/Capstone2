@@ -15,7 +15,7 @@
 
 //Device Info
 #define DEVICE_NAME "Box Sensor V0.1"
-#define DEVICE_ID "bs00120350" 
+#define DEVICE_ID "rw001" 
 
 //Size of buffer equivalent to the number of sensors
 #define BUFFER_SIZE 20
@@ -73,8 +73,8 @@ void reconnect(){
     Serial.print("Attempting to connect to MQTT...");
     String clientId = DEVICE_ID;
     if(client.connect(clientId.c_str(), mqttUser, mqttPassword)){
-      Serial.println("Connected");
-      client.publish(mqttConnectedChannel, "Connected");
+      Serial.println("Connected To Server");
+      client.publish(mqttConnectedChannel, DEVICE_ID);
       client.subscribe(mqttReceiveChannel);
     }
     else {
@@ -122,9 +122,9 @@ uint8_t* numberToPinOutputs(int num){
 }
 
 void setup(){
-  mqttTransmitChannel = strcat("/", DEVICE_ID);
-  mqttReceiveChannel = strcat("/", strcat(DEVICE_ID, "/ping"));
-  mqttConnectedChannel = strcat("/", strcat(DEVICE_ID, "/connected"));
+  mqttTransmitChannel = strcat("/", strcat(DEVICE_ID, "/data");
+  mqttReceiveChannel = strcat("/", DEVICE_ID);
+  mqttConnectedChannel = "/connected";
   Serial.begin(115200);
   Serial.setTimeout(500);
   setup_wifi();
