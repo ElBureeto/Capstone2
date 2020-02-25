@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Feb 13 14:30:43 2020
-
-@author: tjnr4c
-"""
-
 import paho.mqtt.client as mqtt
 import time
 import random as rand
@@ -15,11 +9,17 @@ running = True
 
 client = mqtt.Client(client_id="v_sens000")
 client.username_pw_set("mqtsqrfd", "qWsfSyHmt1D-")
+timestamp = 0
 
 def read_sensors():
     global client
-    print(client.is_connected())
-    #polling rate - time from 1st to last read
+    global timestamp
+    timeDelayBetweenReads = 1 #in secs
+    timeTillSinceRead = (time.time() - timestamp)
+
+    if timeTillSinceRead < timeDelayBetweenReads:
+        time.sleep(timeDelayBetweenReads - timeTillSinceRead)
+
     timestamp = time.time()
     for j in range(10):
         message = deviceID + "," + str(timestamp) + "," + str(j) + "," + str((rand.randrange(1, 200, 3) * 3.14159)  % 20)
