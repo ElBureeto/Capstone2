@@ -9,12 +9,13 @@ running = True
 
 client = mqtt.Client(client_id="v_sens000")
 client.username_pw_set("mqtsqrfd", "qWsfSyHmt1D-")
+timeDelayBetweenReads = 10 #sec
 timestamp = 0
 
 def read_sensors():
     global client
     global timestamp
-    timeDelayBetweenReads = 1 #in secs
+    global timeDelayBetweenReads
     timeTillSinceRead = (time.time() - timestamp)
 
     if timeTillSinceRead < timeDelayBetweenReads:
@@ -24,7 +25,7 @@ def read_sensors():
     for j in range(10):
         message = deviceID + "," + str(timestamp) + "," + str(j) + "," + str((rand.randrange(1, 200, 3) * 3.14159)  % 20)
         client.publish("/" + deviceID + "/data", message)
-        print(message)
+        #print(message) uncomment for debugging of message
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
@@ -34,26 +35,28 @@ def on_connect(client, userdata, flags, rc):
     # reconnect then subscriptions will be renewed.
     client.subscribe("/" + deviceID)
     client.publish("/connected", deviceID)
+    client.subscribe("/" + deviceID + "/delay")
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
     command = str(msg.payload).replace('\'', '').replace('b', '', 1).lower()
-    if command == "get" or command == "start":
+    if msg.topic == "/" + deviceID + "/delay":
+        try:
+            global timeDelayBetweenReads
+            timeDelayBetweenReads = int(command)
+            print("Time delay set to: " + command) #doesnt work while broker is running
+        finally:
+            return
+    elif command == "get" or command == "start":
         read_sensors()
+    elif command == "reconnect":
+        client.reconnect()
+    
 
 client.on_connect = on_connect
 client.on_message = on_message
 
 client.connect("hairdresser.cloudmqtt.com", 17102, 60)    
-
-#while running:
-#    timestamp = time.time()
-#    for j in range(10):
-#        message = deviceID + "," + str(timestamp) + "," + str(j) + "," + str((rand.randrange(1, 200, 3) * 3.14159)  % 20)
-#        client.publish("/data", message)
-#        print(message)
-#    time.sleep((1 / pollingRate) - (time.time() - timestamp))
-
 
 # Blocking call that processes network traffic, dispatches callbacks and
 # handles reconnecting.

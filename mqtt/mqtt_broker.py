@@ -12,7 +12,7 @@ import random as rand
 devices = []
 
 def insertToDb(deivceId, timestamp, sensorNum, output):
-    print(deivceId + ":" + timestamp + ":" + sensorNum + ":" + output) 
+    print(deivceId + ":" + timestamp + ":" + sensorNum + ":" + output)
     client.publish("/" + deivceId, "get")
 
 # The callback for when the client receives a CONNACK response from the server.
