@@ -40,6 +40,11 @@
 #define mqttUser "mqtsqrfd"
 #define mqttPassword "qWsfSyHmt1D-"
 
+//Status Light Pins
+#define LIGHT_PIN_R 12
+#define LIGHT_PIN_G 13
+#define LIGHT_PIN_B 14
+
 /* Mqtt Communication
  * transmiting channel /{DEVICE_ID}
  * receiveing channel /{DEVICE_ID}/ping 
@@ -50,6 +55,9 @@ char* mqttConnectedChannel;
 
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
+
+bool wifiConnected = false;
+bool mqttConnected = false;
 
 /*
   Connects Controller to WiFi
@@ -66,6 +74,7 @@ void setup_wifi(){
   randomSeed(micros());
   Serial.print("\nWifi Connected\nIp address: ");
   Serial.println(WiFi.localIP());
+  wifiConnected = true;
 }
 
 void reconnect(){
@@ -121,21 +130,62 @@ uint8_t* numberToPinOutputs(int num){
   return output;
 }
 
+void update_light(){
+  if(wifiConnected == false){
+    analogWrite(LIGHT_PIN_R, 200);
+    analogWrite(LIGHT_PIN_G, 0);
+    analogWrite(LIGHT_PIN_B, 0);
+  }
+  else if(){
+    analogWrite(LIGHT_PIN_R, 0);
+    analogWrite(LIGHT_PIN_G, 200);
+    analogWrite(LIGHT_PIN_B, 200);
+  }
+  else{
+    analogWrite(LIGHT_PIN_R, 0);
+    analogWrite(LIGHT_PIN_G, 200);
+    analogWrite(LIGHT_PIN_B, 0);
+  }
+}
+
 void setup(){
-  mqttTransmitChannel = strcat("/", strcat(DEVICE_ID, "/data");
-  mqttReceiveChannel = strcat("/", DEVICE_ID);
-  mqttConnectedChannel = "/connected";
+  pinMode(LIGHT_PIN_R, OUTPUT);
+  pinMode(LIGHT_PIN_G, OUTPUT);
+  pinMode(LIGHT_PIN_B, OUTPUT);
+
+  analogWrite(LIGHT_PIN_R, 0);
+  analogWrite(LIGHT_PIN_G, 0);
+  analogWrite(LIGHT_PIN_B, 200);
+
   Serial.begin(115200);
   Serial.setTimeout(500);
+    
   setup_wifi();
+
+  mqttTransmitChannel = strcat("/", strcat(DEVICE_ID, "/data"));
+  mqttReceiveChannel = strcat("/", DEVICE_ID);
+  mqttConnectedChannel = "/connected";
   client.setServer(mqttServer, mqttPort);
   client.setCallback(callback);
   reconnect();
+  
+  update_light()
 }
 
 void loop(){
   client.loop();
 
+  if(WiFi.status() != WL_CONNECTED){
+     wifiConnected = false;
+      update_light();
+     setup_wifi();
+  }
+  else if(!client.connected){
+    reconnect();
+    update_light();
+    reconnect();
+  }
+    
   struct tm* ptr; 
   time_t lt; 
   lt = time(NULL); 
@@ -151,7 +201,7 @@ void loop(){
     int result;
     result = readSensor(numberToPinOutputs(i), true);
   }
-
+  
   //send timestamp and buffer to server
   //resetBuffer();
 }
