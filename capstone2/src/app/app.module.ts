@@ -1,3 +1,4 @@
+import { AboutComponent } from './about/about.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -12,7 +13,8 @@ import { NavComponent } from './nav/nav.component';
   declarations: [
     AppComponent,
     LoginComponent,
-    NavComponent
+    NavComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,
