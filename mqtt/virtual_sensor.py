@@ -1,28 +1,31 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Feb 13 14:30:43 2020
-
-@author: tjnr4c
-"""
-
 import paho.mqtt.client as mqtt
 import time
 import random as rand
 
-deviceID = "vs001"
-pollingRate = 1 #number of reads each sensor has per second
+deviceID = "vs002"
+pollingRate = 0.5 #number of reads each sensor has per second
 running = True
 
-def read_sensors():
-    global running
-    while running:
-        timestamp = time.time()
-        for j in range(10):
-            message = deviceID + "," + str(timestamp) + "," + str(j) + "," + str((rand.randrange(1, 200, 3) * 3.14159)  % 20)
-            client.publish("/" + deviceID + "/data", message)
-            print(message)
+client = mqtt.Client(client_id="v_sens000")
+client.username_pw_set("mqtsqrfd", "qWsfSyHmt1D-")
+timeDelayBetweenReads = 10 #sec
+timestamp = 0
 
-        time.sleep((1 / pollingRate) - (time.time() - timestamp)) #polling rate - time from 1st to last read
+def read_sensors():
+    global client
+    global timestamp
+    global timeDelayBetweenReads
+    timeTillSinceRead = (time.time() - timestamp)
+
+    if timeTillSinceRead < timeDelayBetweenReads:
+        time.sleep(timeDelayBetweenReads - timeTillSinceRead)
+
+    timestamp = time.time()
+    for j in range(10):
+        message = deviceID + "," + str(timestamp) + "," + str(j) + "," + str((rand.randrange(1, 200, 3) * 3.14159)  % 20)
+        client.publish("/" + deviceID + "/data", message)
+        #print(message) uncomment for debugging of message
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
@@ -32,20 +35,24 @@ def on_connect(client, userdata, flags, rc):
     # reconnect then subscriptions will be renewed.
     client.subscribe("/" + deviceID)
     client.publish("/connected", deviceID)
+    client.subscribe("/" + deviceID + "/delay")
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
-    global running
     command = str(msg.payload).replace('\'', '').replace('b', '', 1).lower()
-    if command == "stop":
-        running = False
-    elif command == "start":
-        running = True
-        print("Starting Up")
+    if msg.topic == "/" + deviceID + "/delay":
+        try:
+            global timeDelayBetweenReads
+            timeDelayBetweenReads = int(command)
+            print("Time delay set to: " + command) #doesnt work while broker is running
+        finally:
+            return
+    elif command == "get" or command == "start":
         read_sensors()
+    elif command == "reconnect":
+        client.reconnect()
+    
 
-client = mqtt.Client(client_id="v_sens000")
-client.username_pw_set("mqtsqrfd", "qWsfSyHmt1D-")
 client.on_connect = on_connect
 client.on_message = on_message
 

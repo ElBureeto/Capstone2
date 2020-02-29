@@ -12,7 +12,8 @@ import random as rand
 devices = []
 
 def insertToDb(deivceId, timestamp, sensorNum, output):
-    return
+    print(deivceId + ":" + timestamp + ":" + sensorNum + ":" + output)
+    client.publish("/" + deivceId, "get")
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
@@ -20,10 +21,12 @@ def on_connect(client, userdata, flags, rc):
 
     client.subscribe("/info") #subscribed to allow commands to be called on logic server
     client.subscribe("/connected") #subscribed to get devices that connect
+    #client.subscribe("/data")
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client0, userdata, msg):
     global client
+    print("MESSAGE")
     if msg.topic == "/connected":
         newDevice = str(msg.payload).replace('\'', '').replace('b', '', 1)
         if newDevice not in devices:
@@ -44,7 +47,6 @@ def on_message(client0, userdata, msg):
     else:
         cleanedPayload = str(msg.payload).replace('\'', '').replace('b', '', 1).lower()
         parts = cleanedPayload.split(',')
-        print(parts)
         insertToDb(parts[0], parts[1], parts[2], parts[3])
 
 client = mqtt.Client(client_id="ls002")
