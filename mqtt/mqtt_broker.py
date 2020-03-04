@@ -5,15 +5,32 @@ Created on Thu Feb 13 14:30:43 2020
 @author: tjnr4c
 """
 
+# subscribe to /vs002
+
 import paho.mqtt.client as mqtt
 import time
 import random as rand
+from pymongo import MongoClient
 
 devices = []
 
-def insertToDb(deivceId, timestamp, sensorNum, output):
-    print(deivceId + ":" + timestamp + ":" + sensorNum + ":" + output)
-    client.publish("/" + deivceId, "get")
+def insertToDb(deviceId, timestamp, sensorNum, output):
+    print(deviceId + ":" + timestamp + ":" + sensorNum + ":" + output)
+    # make connection to mongo
+    mongo_client = MongoClient('mongodb://ec2-34-219-51-110.us-west-2.compute.amazonaws.com:27017')
+    database = mongo_client.sensor
+    collection = database.readings
+    document = {
+        "deviceId": deviceId,
+        "timestamp": timestamp,
+        "sensorNum": sensorNum,
+        "output": output
+    }
+    
+    rec_id = collection.insert_one(document)
+    print(rec_id)
+
+    client.publish("/" + deviceId, "get")
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
@@ -48,6 +65,7 @@ def on_message(client0, userdata, msg):
         cleanedPayload = str(msg.payload).replace('\'', '').replace('b', '', 1).lower()
         parts = cleanedPayload.split(',')
         insertToDb(parts[0], parts[1], parts[2], parts[3])
+
 
 client = mqtt.Client(client_id="ls002")
 client.username_pw_set("mqtsqrfd", "qWsfSyHmt1D-")
