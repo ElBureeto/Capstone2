@@ -20,6 +20,8 @@ def insertToDb(deviceId, timestamp, sensorNum, output):
     mongo_client = MongoClient('mongodb://ec2-34-219-51-110.us-west-2.compute.amazonaws.com:27017')
     database = mongo_client.sensor
     collection = database.readings
+
+    # define document to insert into collection
     document = {
         "deviceId": deviceId,
         "timestamp": timestamp,
@@ -27,6 +29,7 @@ def insertToDb(deviceId, timestamp, sensorNum, output):
         "output": output
     }
     
+    # insert document into collection
     rec_id = collection.insert_one(document)
     print(rec_id)
 
