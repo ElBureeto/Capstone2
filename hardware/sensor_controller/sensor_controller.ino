@@ -41,9 +41,9 @@
 #define mqttPassword "qWsfSyHmt1D-"
 
 //Status Light Pins
-#define LIGHT_PIN_R 12
-#define LIGHT_PIN_G 13
-#define LIGHT_PIN_B 14
+#define LIGHT_PIN_R 31
+#define LIGHT_PIN_G 30
+#define LIGHT_PIN_B 29
 
 /* Mqtt Communication
  * transmiting channel /{DEVICE_ID}
@@ -132,33 +132,38 @@ uint8_t* numberToPinOutputs(int num){
 
 void update_light(){
   if(wifiConnected == false){
-    analogWrite(LIGHT_PIN_R, 200);
-    analogWrite(LIGHT_PIN_G, 0);
-    analogWrite(LIGHT_PIN_B, 0);
+    ledcWrite(1, 255);
+    ledcWrite(2, 0);
+    ledcWrite(3, 0);
   }
-  else if(){
-    analogWrite(LIGHT_PIN_R, 0);
-    analogWrite(LIGHT_PIN_G, 200);
-    analogWrite(LIGHT_PIN_B, 200);
+  
+  else if(!client.connected){
+    ledcWrite(1, 0);
+    ledcWrite(2, 255);
+    ledcWrite(3, 255);
   }
   else{
-    analogWrite(LIGHT_PIN_R, 0);
-    analogWrite(LIGHT_PIN_G, 200);
-    analogWrite(LIGHT_PIN_B, 0);
+    ledcWrite(1, 0);
+    ledcWrite(2, 255);
+    ledcWrite(3, 0);
   }
 }
 
 void setup(){
-  pinMode(LIGHT_PIN_R, OUTPUT);
-  pinMode(LIGHT_PIN_G, OUTPUT);
-  pinMode(LIGHT_PIN_B, OUTPUT);
-
-  analogWrite(LIGHT_PIN_R, 0);
-  analogWrite(LIGHT_PIN_G, 0);
-  analogWrite(LIGHT_PIN_B, 200);
-
   Serial.begin(115200);
   Serial.setTimeout(500);
+  
+  ledcAttachPin(LIGHT_PIN_R, 1);
+  ledcAttachPin(LIGHT_PIN_G, 2);
+  ledcAttachPin(LIGHT_PIN_B, 3);
+
+  ledcSetup(1, 12000, 8);
+  ledcSetup(2, 12000, 8);
+  ledcSetup(3, 12000, 8);
+  
+  ledcWrite(1, 0);
+  ledcWrite(2, 0);
+  ledcWrite(3, 200);
     
   setup_wifi();
 
@@ -169,7 +174,7 @@ void setup(){
   client.setCallback(callback);
   reconnect();
   
-  update_light()
+  update_light();
 }
 
 void loop(){
