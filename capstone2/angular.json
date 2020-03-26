@@ -29,7 +29,7 @@
             ],
             "scripts": [
                "./node_modules/jquery/dist/jquery.min.js",
-               "src/assets/js/jquery.particleground.min.js"
+               "src/assets/js/jquery.particleground.js"
             ]
           },
           "configurations": {
