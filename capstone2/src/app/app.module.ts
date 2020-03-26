@@ -8,11 +8,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
 import { LoginComponent } from './login/login.component';
 import { NavComponent } from './nav/nav.component';
-<<<<<<< HEAD
 import { BalanceComponent } from './balance/balance.component';
-=======
 import { HttpClientModule } from '@angular/common/http';
->>>>>>> c46e9a726870c3650d355285df4b20b0affbe3dd
 
 @NgModule({
   declarations: [
