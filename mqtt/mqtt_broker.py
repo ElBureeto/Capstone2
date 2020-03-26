@@ -17,7 +17,7 @@ devices = []
 def insertToDb(deviceId, timestamp, sensorNum, output):
     print(deviceId + ":" + timestamp + ":" + sensorNum + ":" + output)
     # make connection to mongo
-    mongo_client = MongoClient('mongodb://ec2-34-219-51-110.us-west-2.compute.amazonaws.com:27017')
+    mongo_client = MongoClient('mongodb://albert:lk552222@ec2-34-219-51-110.us-west-2.compute.amazonaws.com:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false')
     database = mongo_client.sensor
     collection = database.readings
 
@@ -66,6 +66,7 @@ def on_message(client0, userdata, msg):
 
     else:
         cleanedPayload = str(msg.payload).replace('\'', '').replace('b', '', 1).lower()
+        print(cleanedPayload)
         parts = cleanedPayload.split(',')
         insertToDb(parts[0], parts[1], parts[2], parts[3])
 
