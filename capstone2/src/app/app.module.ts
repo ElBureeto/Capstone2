@@ -10,6 +10,7 @@ import { LoginComponent } from './login/login.component';
 import { NavComponent } from './nav/nav.component';
 import { BalanceComponent } from './balance/balance.component';
 import { HttpClientModule } from '@angular/common/http';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
