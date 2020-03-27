@@ -12,17 +12,28 @@ mat-card {
     margin: 0 auto;
 }
 
+mat-card-title{
+    text-align: center;
+}
+
 .breaker-wrapper {
-    width: 8em;
-    margin: 0 auto;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+}
+
+.column{
+    flex: 1;
+    margin-left: 1em;
 }
 
 .breaker {
     height: 2em;
     width: 8em;
     margin-top: 1em;
-    background-color: #ff4040;
-    border: 2px solid #ff4040;
+    /* background-color: #ff4040; */
+    /* border: 2px solid #ff4040; */
     opacity: 0.7;
     display: flex;
 }
@@ -30,23 +41,25 @@ mat-card {
 .breaker-detail-1 {
     height: 1em;
     width: 1em;
-    background-color: #ff4040;
+    /* background-color: #ff4040; */
     border: 1px solid black;
     opacity: 0.5;
     border-radius: 50%;
     transform: translateY(35%);
     margin-left: 0.25em;
+    margin-right: 0.5em;
     display: inline;
 }
 
 .breaker-detail-2 {
-    height: 100%;
+    text-align: center;
+    margin: auto;
+    /* height: 100%; */
     width: 3.5em;
-    margin-left: 0.5em;
     border-left: 1px solid black;
     border-right: 1px solid black;
     opacity: 0.5;
-    display: inline;
+    /* display: inline; */
 }
 
 .breaker-detail-3 {
@@ -70,4 +83,21 @@ mat-card {
 .savings {
     margin-top: 2em;
     text-align: center;
+}
+
+.low{
+    background-color: green;
+    border: 2px solid green;
+
+}
+
+.high{
+    background-color: #ff4040;
+    border: 2px solid #ff4040;
+
+}
+
+.mid{
+    background-color: yellow;
+    border: 2px solid yellow;
 }
