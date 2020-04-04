@@ -101,3 +101,13 @@ mat-card-title{
     background-color: yellow;
     border: 2px solid yellow;
 }
+
+button {
+    padding: 1em;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 1em;
+    display: block;
+    width: 100%;
+    font-size: 1em;
+}
