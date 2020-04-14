@@ -1,12 +1,12 @@
 <div id="particles"></div>
 <div id="content">
     <mat-card>
-        <mat-card-title>Login</mat-card-title>
+        <mat-card-title>Change Sensor ID</mat-card-title>
         <mat-card-content>
             <form>
                 <p>
                     <mat-form-field>
-                        <input type="text" matInput placeholder="Sensor ID" formControlName="sensorid">
+                        <input type="text" matInput placeholder="Sensor ID" formControlName="sensorid" #sensorID>
                     </mat-form-field>
                 </p>
 
@@ -17,7 +17,7 @@
                 <br>
 
                 <div class="button">
-                    <button type="submit" mat-button>Login</button>
+                    <button type="button" (click)="changeSensorID()" mat-button>Change Sensor ID</button>
                 </div>
 
             </form>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../services/api/api.service';
 import { NgxSpinnerService } from "ngx-spinner";
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-balance',
@@ -8,7 +9,6 @@ import { NgxSpinnerService } from "ngx-spinner";
   styleUrls: ['./balance.component.css']
 })
 export class BalanceComponent implements OnInit {
-
   sensors: any[];
 
   constructor(
@@ -24,12 +24,10 @@ export class BalanceComponent implements OnInit {
     this.spinner.show();
     this.api.getSensors().subscribe(res => {
       this.spinner.hide();
-      console.log(res);
       res = Object.values(res);
       this.sensors = res.map(function (value) {
         return parseFloat(parseFloat(value).toPrecision(3));
       });
-      console.log(this.sensors);
     });
   }
 

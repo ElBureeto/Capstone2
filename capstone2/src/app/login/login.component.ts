@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material'
 import { Interpolation } from '@angular/compiler';
+import { environment } from 'src/environments/environment';
 
 declare var $: JQuery;
 
@@ -18,9 +19,7 @@ declare global {
     styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
-    username: string;
-    password: string;
+    @ViewChild("sensorID", {static: true}) sensorID: ElementRef;
 
     constructor(
         private router: Router
@@ -30,12 +29,9 @@ export class LoginComponent implements OnInit {
         this.particlesBackground();
     }
 
-    login(): void {
-        if (this.username == 'admin' && this.password == 'admin') {
-            this.router.navigate(["user"]);
-        } else {
-            alert("Invalid credentials");
-        }
+    changeSensorID() {
+        environment.sensorID = this.sensorID.nativeElement.value.toString();
+        console.log(this.sensorID.nativeElement.value.toString());
     }
 
     particlesBackground() {
