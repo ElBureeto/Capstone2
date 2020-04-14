@@ -3,7 +3,7 @@ import paho.mqtt.client as mqtt
 import time
 import random as rand
 
-deviceID = "vs002"
+deviceID = "vs001"
 pollingRate = 0.5 #number of reads each sensor has per second
 running = True
 
@@ -21,11 +21,24 @@ def read_sensors():
     if timeTillSinceRead < timeDelayBetweenReads:
         time.sleep(timeDelayBetweenReads - timeTillSinceRead)
 
+    random_values = []
+    random_values.append(10.0 + rand.uniform(-5, 5))
+    random_values.append(8.0 + rand.uniform(-5, 5))
+    random_values.append(3.0 + rand.uniform(-1, 7))
+    random_values.append(2.0 + rand.uniform(0, 2))
+    random_values.append(18.0 + rand.uniform(-1, 1))
+    random_values.append(8.0 + rand.uniform(-3, 3))
+    random_values.append(10.0 + rand.uniform(-2, 2))
+    random_values.append(13.0 + rand.uniform(-2, 5))
+    random_values.append(10.0 + rand.uniform(-8, 8))
+    random_values.append(8.0 + rand.uniform(-3, 3))
+
     timestamp = time.time()
     for j in range(10):
-        message = deviceID + "," + str(timestamp) + "," + str(j) + "," + str((rand.randrange(1, 200, 3) * 3.14159 % 20))
+        message = deviceID + "," + str(timestamp) + "," + str(j) + "," + str(random_values[j])
         client.publish("/" + deviceID + "/data", message)
-        #print(message) uncomment for debugging of message
+        #ncomment for debugging of message
+        # print(message) 
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
