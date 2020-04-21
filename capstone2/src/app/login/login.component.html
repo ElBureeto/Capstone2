@@ -1,0 +1,26 @@
+<div id="particles"></div>
+<div id="content">
+    <mat-card>
+        <mat-card-title>Change Sensor ID</mat-card-title>
+        <mat-card-content>
+            <form>
+                <p>
+                    <mat-form-field>
+                        <input type="text" matInput placeholder="Sensor ID" formControlName="sensorid" #sensorID>
+                    </mat-form-field>
+                </p>
+
+                <p *ngIf="error" class="error">
+                    {{ error }}
+                </p>
+
+                <br>
+
+                <div class="button">
+                    <button type="button" (click)="changeSensorID()" mat-button>Change Sensor ID</button>
+                </div>
+
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -1,5 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import url('https://fonts.googleapis.com/css?family=Nunito:400,700&display=swap');
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* You can add global styles to this file, and also import other style files */
+
+
+@font-face{
+   font-family: Stengkol;
+   src: url(assets/fonts/StengKol01.tff) format("opentype");
+}
+
+body{
+    margin: 0;
+    font-family: 'Stengkol', 'sans-serif';
+    font-size: 18px;
+    background: #f9f9f9;
+}

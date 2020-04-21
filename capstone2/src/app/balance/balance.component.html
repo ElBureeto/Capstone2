@@ -1,0 +1,49 @@
+<div id="wrapper">
+    <ngx-spinner></ngx-spinner>
+    <div id="content">
+        <mat-card>
+            <mat-card-title>Breaker Balance Sheet</mat-card-title>
+            <mat-card-content>
+                <div class='breaker-wrapper'>
+                    <div class="column">
+                        <div *ngFor="let sensor of data.circuit1; let i = index;">
+                            <!-- if odd => column 1  -->
+                            <div>
+                                <div class="breaker" [ngClass]="{
+                                  'low'  : colorSensor(sensor) === 0,
+                                  'mid'  : colorSensor(sensor) === 1,
+                                  'high' : colorSensor(sensor) === 2 }">                                    
+                                    <div class='breaker-detail-1'></div>
+                                    <div class='breaker-detail-2'>{{sensor}}</div>
+                                    <div class='breaker-detail-3'>{{i+1}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div *ngFor="let sensor of data.circuit2; let i = index;">
+                            <!-- else if even => column 2 -->
+                            <div>
+                                <div class="breaker" [ngClass]="{
+                                    'low'  : colorSensor(sensor) === 0,
+                                    'mid'  : colorSensor(sensor) === 1,
+                                    'high' : colorSensor(sensor) === 2 }">
+                                    <div class='breaker-detail-1'></div>
+                                    <div class='breaker-detail-2'>{{sensor}}</div>
+                                    <div class='breaker-detail-3'>{{(i+1)+data.circuit1.length}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class='usage-wrapper'>
+                    <div class='usage' id='1'>Circuit 1 Usage: {{data.circuitUsage[0].toPrecision(3)}}</div>
+                    <div class='usage' id='2'>Circuit 2 Usage: {{data.circuitUsage[1].toPrecision(3)}}</div>
+                </div>
+                <div class='savings'>Potential Savings: {{savings.toPrecision(3)}}</div>
+                <button (click)="balanceSensors(data); balanced = true;" [disabled]="balanced">Balance Breaker</button>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
