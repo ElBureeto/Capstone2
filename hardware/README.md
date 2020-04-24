@@ -11,7 +11,7 @@ The circuit the team decide to use rectifies the incoming sinudoidal wave, ampli
 
 In this picture you can see how we implemented it using a bread board
 
-![breadboard](https://github.com/ElBureeto/Capstone2/blob/develop/hardware/Images%20and%20Schematics/circuit%20Diagram.png)
+![breadboard](https://github.com/ElBureeto/Capstone2/blob/develop/hardware/Images%20and%20Schematics/breadboard.jpg)
 
 
 After the circuit was assembled we powered it using an usb power supply. 
