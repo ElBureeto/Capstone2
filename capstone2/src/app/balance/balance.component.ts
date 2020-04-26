@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../services/api/api.service';
 import { NgxSpinnerService } from "ngx-spinner";
 
-class CircuitData {
+export class CircuitData {
   circuit1: number[][] = [];
   circuit2: number[][] = []; 
   circuitUsage: number[] = [0.0, 0.0];
