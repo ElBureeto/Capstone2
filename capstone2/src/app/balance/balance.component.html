@@ -10,12 +10,12 @@
                             <!-- if odd => column 1  -->
                             <div>
                                 <div class="breaker" [ngClass]="{
-                                  'low'  : colorSensor(sensor) === 0,
-                                  'mid'  : colorSensor(sensor) === 1,
-                                  'high' : colorSensor(sensor) === 2 }">                                    
+                                  'low'  : colorSensor(sensor[1]) === 0,
+                                  'mid'  : colorSensor(sensor[1]) === 1,
+                                  'high' : colorSensor(sensor[1]) === 2 }">                                    
                                     <div class='breaker-detail-1'></div>
-                                    <div class='breaker-detail-2'>{{sensor}}</div>
-                                    <div class='breaker-detail-3'>{{i+1}}</div>
+                                    <div class='breaker-detail-2'>{{sensor[1]}}</div>
+                                    <div class='breaker-detail-3'>{{sensor[0]}}</div>
                                 </div>
                             </div>
                         </div>
@@ -25,12 +25,12 @@
                             <!-- else if even => column 2 -->
                             <div>
                                 <div class="breaker" [ngClass]="{
-                                    'low'  : colorSensor(sensor) === 0,
-                                    'mid'  : colorSensor(sensor) === 1,
-                                    'high' : colorSensor(sensor) === 2 }">
+                                    'low'  : colorSensor(sensor[1]) === 0,
+                                    'mid'  : colorSensor(sensor[1]) === 1,
+                                    'high' : colorSensor(sensor[1]) === 2 }">
                                     <div class='breaker-detail-1'></div>
-                                    <div class='breaker-detail-2'>{{sensor}}</div>
-                                    <div class='breaker-detail-3'>{{(i+1)+data.circuit1.length}}</div>
+                                    <div class='breaker-detail-2'>{{sensor[1]}}</div>
+                                    <div class='breaker-detail-3'>{{sensor[0]}}</div>
                                 </div>
                             </div>
                         </div>

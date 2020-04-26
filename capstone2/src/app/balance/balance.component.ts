@@ -3,8 +3,8 @@ import { ApiService } from '../services/api/api.service';
 import { NgxSpinnerService } from "ngx-spinner";
 
 class CircuitData {
-  circuit1: number[];
-  circuit2: number[];
+  circuit1: number[][] = [];
+  circuit2: number[][] = []; 
   circuitUsage: number[] = [0.0, 0.0];
 }
 
@@ -32,11 +32,17 @@ export class BalanceComponent implements OnInit {
     this.api.getSensors().subscribe(res => {
       this.spinner.hide();
       res = Object.values(res);
-      let sensors: number[] = res.map(function (value) {
-        return parseFloat(parseFloat(value).toPrecision(3));
+      let id: number = 1;
+      let sensors: number[][] = res.map(function (value) {
+        return [id++, parseFloat(parseFloat(value).toPrecision(3))];
       });
-      this.data.circuit1 = sensors.slice(0, sensors.length/2);
-      this.data.circuit2 = sensors.slice(sensors.length/2, sensors.length);
+      // this.data.circuit1 = sensors.slice(0, sensors.length/2);
+      // this.data.circuit2 = sensors.slice(sensors.length/2, sensors.length);
+
+      for (var i=0; i<sensors.length/2; i++) {
+        this.data.circuit1.push(sensors[i*2]);
+        this.data.circuit2.push(sensors[(i*2)+1]);
+      }
 
       this.calculateCircuitUsage(this.data);
       this.savings = this.calculateSavings(this.data);
@@ -44,10 +50,10 @@ export class BalanceComponent implements OnInit {
   }
   calculateCircuitUsage(data: CircuitData) {
     for (var i = 0; i < data.circuit1.length; i++) {
-      data.circuitUsage[0] += data.circuit1[i];
+      data.circuitUsage[0] += data.circuit1[i][1];
     }
     for (var i = 0; i < data.circuit2.length; i++) {
-      data.circuitUsage[1] += data.circuit2[i];
+      data.circuitUsage[1] += data.circuit2[i][1];
     }
   }
 
@@ -70,18 +76,18 @@ export class BalanceComponent implements OnInit {
 
   balanceSensors(data: CircuitData): CircuitData {
     let sensors = data.circuit1.concat(data.circuit2);
-    sensors.sort(function (a, b) { return b > a ? 1 : -1 });
+    sensors.sort(function (a, b) { return b[1] > a[1] ? 1 : -1 });
 
     let tempCircuit1 = [];
     let tempCircuit2 = [];
     let tempCircuitUsage = [0.0, 0.0];
     for (var i = 0; i < 10; i++) {
       if (tempCircuitUsage[0] > tempCircuitUsage[1]) {
-        tempCircuitUsage[1] += sensors[i];
+        tempCircuitUsage[1] += sensors[i][1];
         tempCircuit2.push(sensors[i]);
       }
       else {
-        tempCircuitUsage[0] += sensors[i];
+        tempCircuitUsage[0] += sensors[i][1];
         tempCircuit1.push(sensors[i]);
       }
     }
