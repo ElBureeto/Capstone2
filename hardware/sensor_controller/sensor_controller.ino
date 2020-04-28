@@ -12,6 +12,7 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <time.h>
+#include <string.h>
 
 //Device Info
 #define DEVICE_NAME "Box Sensor V0.1"
@@ -21,24 +22,21 @@
 #define BUFFER_SIZE 20
 
 //Declaring Pins **temp pin numbers currently**
-#define MUX0_PIN_S0 0 //out put pin 0 for mux0
-#define MUX0_PIN_S1 1 //out put pin 1 for mux0
-#define MUX0_PIN_S2 2 //out put pin 2 for mux0
-#define MUX0_SIG_PIN 3 //pin signal is read from mux0
-#define MUX1_PIN_S0 4 //out put pin 0 for mux1
-#define MUX1_PIN_S1 5 //out put pin 1 for mux1
-#define MUX1_PIN_S2 6 //out put pin 2 for mux1
-#define MUX1_SIG_PIN 7//pin signal is read from mux1
+#define MUX_PIN_S0 0 //output pin 0 for mux
+#define MUX_PIN_S1 1 //output pin 1 for mux
+#define MUX_PIN_S2 2 //output pin 2 for mux
+#define MUX_PIN_S3 4 //output pin 3 for mux
+#define MUX_SIG_PIN 3 //pin signal is read from mux0
 
 //WiFi Connection
 #define ssid "Apt 109"
-#define password "kamiy9ce1e"
+#define password "******"
 
 //Mqtt Connection
 #define mqttServer "hairdresser.cloudmqtt.com"
 #define mqttPort 17102
 #define mqttUser "mqtsqrfd"
-#define mqttPassword "qWsfSyHmt1D-"
+#define mqttPassword "******"
 
 //Status Light Pins
 #define LIGHT_PIN_R 12
@@ -105,31 +103,24 @@ void callback(char* topic, byte *payload, unsigned int length) {
     Serial.println();
 }
 
-int readSensor(uint8_t pins[], bool testing){  
+int readSensor(bool testing){  
   if(testing){
     time_t t;
     srand((unsigned) time(&t));
 
     return((rand() % 20) + 1);
   }
-  return 0;
+  return analogRead(MUX_SIG_PIN);
 }
 
-uint8_t* numberToPinOutputs(int num){
-  if(num > 15)
-    return NULL;
-  
-  uint8_t output[4];
-  int i = 0;
-  while(num > 0){
-    output[i] = num % 2;
-    num = num / 2;
-    i++;
-  }
-
-  return output;
+uint8_t* selectPin(byte num){
+  if (byte & (1<<i))
+      digitalWrite(selectPins[i], HIGH);
+    else
+      digitalWrite(selectPins[i], LOW);
 }
 
+/*
 void update_light(){
   if(wifiConnected == false){
     analogWrite(LIGHT_PIN_R, 200);
@@ -146,7 +137,7 @@ void update_light(){
     analogWrite(LIGHT_PIN_G, 200);
     analogWrite(LIGHT_PIN_B, 0);
   }
-}
+}*/
 
 void setup(){
   pinMode(LIGHT_PIN_R, OUTPUT);
@@ -185,23 +176,29 @@ void loop(){
     update_light();
     reconnect();
   }
-    
+
+  //Gets the time
   struct tm* ptr; 
   time_t lt; 
   lt = time(NULL); 
   ptr = gmtime(&lt);
-
   char* timestamp = asctime(ptr);
-  Serial.println(timestamp);
-  //get timestamp
-  for(int i = 0; i < (BUFFER_SIZE / 2); i++){
-    //set serial pins
-    //store sensor data into buff[i] (May be able to skip and save memory)
-    //delay(50)
-    int result;
-    result = readSensor(numberToPinOutputs(i), true);
+
+  //read data from the sensor and send to server
+  for(int i = 0; i < 10; i++){
+    selectPins(i % 10);
+    float result;
+    result = readSensor(false);
+
+    //construct payload message
+    char *part = "";
+    char *msg = strcat(DEVICE_ID, strcat(",", timestamp));
+    itoa(i, part);
+    msg = strcat(msg, strcat(",", part));
+    gcvt(result, 6, part);
+    msg = strcat(msg, strcat(",", part);
+
+    
+    client.publish(mqttTransmitChannel, msg);
   }
-  
-  //send timestamp and buffer to server
-  //resetBuffer();
 }
