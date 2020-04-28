@@ -28,6 +28,9 @@ import { NgxSpinnerModule } from "ngx-spinner";
     HttpClientModule,
     NgxSpinnerModule
   ],
+  exports: [    
+    NgxSpinnerModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })
