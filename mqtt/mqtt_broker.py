@@ -16,7 +16,7 @@ devices = []
 def insertToDb(deviceId, timestamp, sensorNum, output):
     print(deviceId + ":" + timestamp + ":" + sensorNum + ":" + output)
     # make connection to mongo
-    mongo_client = MongoClient('mongodb://albert:lk552222@ec2-34-219-51-110.us-west-2.compute.amazonaws.com:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false')
+    mongo_client = MongoClient('localhost')
     database = mongo_client.sensor
     collection = database.readings
 
